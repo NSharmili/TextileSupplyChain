@@ -1,0 +1,376 @@
+<!DOCTYPE html> 
+<html> 
+  
+<head> 
+    <title>CollectWeaveDetails</title> 
+    <link rel="stylesheet" > 
+          <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" crossorigin="anonymous"></script>
+		  <style>
+			body {
+			 margin: 0;
+			 padding: 0;
+			 font-family: Arial, sans-serif;
+			 background-image: url("./static/Weaver.jpg"); /* Your background image path */
+			 background-size: 1600px 1100px; /* Cover the entire viewport */
+			 background-position:center ; /* Center the background image */
+			 background-repeat: no-repeat; /* Do not repeat the background image */
+			 color: #333; /* Default text color */
+		 }
+		 
+		 .container {
+			 max-width: 600px;
+			 margin: 20px auto;
+			 padding: 20px;
+			 border: 1px solid #ccc;
+			 border-radius: 5px;
+			 background-color: rgba(255, 255, 255, 0.8);
+		 }
+		 
+		 .button-container {
+			 display: flex;
+			 flex-wrap: wrap;
+			 justify-content: space-between;
+			 margin-bottom: 20px;
+		 }
+		 
+		 /* .input-container {
+			 display: flex;
+			 flex-wrap: wrap;
+			 justify-content: space-between;
+		 }
+		 
+		 .input-group {
+			 flex: 0 0 calc(50% - 10px);
+			 margin-bottom: 10px;
+		 }
+		 
+		 .input-group label {
+			 width: 40%;
+			 margin-right: 10px;
+		 }
+		 
+		 .input-group input {
+			 flex: 1;
+		 }
+		  */
+		  /* CSS */
+.input-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.input-group {
+    flex: 0 0 calc(50% - 10px); /* Adjusted width to accommodate three fields in a row */
+    margin-bottom: 10px;
+}
+.input-group {
+    flex: 0 0 calc(33.33% - 10px); /* Adjusted width to accommodate three fields in a row */
+    margin-bottom: 10px;
+}
+
+
+.input-group label {
+    width: 35%; /* Adjusted width of labels */
+    margin-right: 10px;
+}
+
+.input-group input {
+    flex: 1;
+}
+
+		 button[type="submit"] {
+			width: 150px;
+				 padding: 6px 12px; /* Reduced button padding */
+				 margin: 5px 0; /* Adjusted button margin */
+				 cursor: pointer;
+				 background-color: hwb(320 4% 6%);
+				 color: white;
+				 border: none;
+				 border-radius: 5px;
+	
+					 }
+		 button[type="submit"]:hover {
+				 background-color: #f30967;
+			
+			 }
+		 .button-container {
+			 display: flex;
+			 flex-direction: row; /* Align items in a column */
+			 align-items: flex-start; /* Align items to the start of the column */
+		 }
+		 
+		 .button-container button {
+			 margin-bottom: 10px; /* Add margin between buttons */
+		 }
+		 
+		 h1 {
+				 text-align: center;
+			 }
+		 
+			 button {
+				width: 150px;
+				 padding: 6px 12px; /* Reduced button padding */
+				 margin: 5px 0; /* Adjusted button margin */
+				 cursor: pointer;
+				 background-color: #074defa0;
+				 color: white;
+				 border: none;
+				 border-radius: 5px;
+			 }
+		 
+			 button:hover {
+				 background-color: #3009dc;
+			 }
+		 
+			 input[type="text"],
+			 input[type="number"] {
+				 /* width: 110px; Adjusted input width */
+				 flex-direction: column;
+				 padding: 3px;
+				 margin: 8px 0;
+				 border: 1px solid #ccc;
+				 border-radius: 4px;
+			 }
+		 
+			 label {
+				 margin-top: 10px;
+			 }
+		 
+			 p {
+				 margin-top: 10px;
+			 }
+		 
+			 #contractArea,
+			 #contrcatStatus,
+			 #rawArea {
+			   margin-top: 10px;
+			 }
+			 .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: #fae9323b; /* Black w/ opacity */
+        }
+
+        /* Modal content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+
+        /* Close button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 38px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+		fieldset {
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 2px; /* Add border radius */
+    padding: 10px; /* Add padding */
+    margin-bottom: 10px; /* Add margin */
+    background-color:transparent; /* Background color */
+}
+
+		   </style>
+		
+	</head>
+	<body onload="initialize()">
+		<div class="container">
+			
+			<h1> Collect Weave Details</h1>
+
+			<p id="contractArea"></p>
+			<p id="contractStatus"></p>
+			<p id="username"></p>
+
+			<div class="input-container">
+			
+		    <div class="input-group">
+		   <button onclick="getuID()">Get Unique Fabric ID</button>
+			<input type="number" id="fabricNumr">
+			</div>
+			<p id="rawArea"></p>
+		</div>
+			<div class="input-container">
+				<div class="input-group">
+					<label for="uID">Unique ID:</label>
+					<input type="text" id="uID" name="uID" required><br>
+				</div>
+			</div>
+			
+
+			<!-- HTML -->
+<div class="input-container">
+    <div class="input-group">
+        <h3>Weave Details:</h3>
+    </div>
+    <div class="input-group">
+        <label for="warp">Warp Yarn:</label>
+        <input type="text" id="warp" name="warp" required>
+	</div>
+    <div class="input-group">
+        <label for="weft">Weft Yarn:</label>
+        <input type="text" id="weft" name="weft" required>
+	</div>
+    <div class="input-group">
+        <label for="certification">Certification:</label>
+        <input type="text" id="certification" name="certification" required>
+	</div>
+    <div class="input-group">
+        <label for="colourfastness">Colourfastness:</label>
+        <input type="text" id="colourfastness" name="colourfastness" required>
+    </div>
+    <div class="input-group">
+        <label for="strength">Strength:</label>
+        <input type="number" id="strength" name="strength" required>
+    </div>
+</div>
+
+			
+			<button onclick="collectweavedetails()">Collect Weave Details</button> 
+			<div id="feedback"></div>
+		 
+			<button onClick="getFabric()">Get Weave details</button>
+			<input type="text" id="uid" placeholder="Enter fabric uID">
+			
+			<div class="input-container">
+				<div class="input-group">
+					<p id="dataArea1"></p>
+					<p id="dataArea2"></p>
+				</div>
+				<div class="input-group">
+					<p id="dataArea3"></p>
+					<p id="dataArea4"></p>
+				</div>
+				<div class="input-group">
+					<p id="dataArea"></p>
+					<p id="dataArea5"></p>
+				</div>
+			</div>
+
+		</div>
+		<!-- <script src="./index.js"></script> -->
+		<script src="{{ url_for('static', filename='index.js') }}"></script>
+
+
+    <script >
+
+		const initialize=async()=>{
+			connect();
+			userName();
+		}
+		
+		const userName=async()=>{
+			const uadd=account;
+			let data;
+                data = await window.contract.methods.getWeaverdetails(uadd).call({from:uadd,gas:9000000});
+                // Since Solidity returns (farmerName, location), data is an array
+        	const weaverName = data[0]; 
+			alert(weaverName);
+			document.getElementById("username").innerHTML=`<strong>Hi </strong> ${weaverName}`;
+		}
+        const collectweavedetails=async()=>{
+			console.log(account);
+            let fabricID = document.getElementById('uID').value;
+            fabricID=web3.utils.asciiToHex(fabricID);
+            const weaverID = account;
+			// var date = new Date();
+			// let text = date.toString();
+            const warp = document.getElementById('warp').value;
+            const weft = document.getElementById('weft').value;
+            const certification = document.getElementById('certification').value;
+            const colourfastness = document.getElementById('colourfastness').value;
+            const strength = document.getElementById('strength').value;
+			
+            await window.contract.methods.collectWeave(web3.utils.hexToAscii(fabricID),weaverID,warp,weft,certification,colourfastness,strength).send({from:account,gas:4000000});
+         }
+        
+        const getuID =async()=>{
+            const fabID = document.getElementById('fabricNumr').value;
+            const uID=await window.contract.methods.getUniquefabricID(fabID).call();
+            document.getElementById("rawArea").innerHTML=uID;
+        }
+		        const getFabric=async()=> {
+            //const uid = document.getElementById("uid").value;
+			let uID=document.getElementById("uid").value;
+            uID=web3.utils.asciiToHex(uID);
+            const data1=await window.contract.methods.getFabricDetails(web3.utils.hexToAscii(uID)).call({from:account,gas:9000000});
+            const data2=await window.contract.methods.getFabricQualityMetrics(web3.utils.hexToAscii(uID)).call({from:account,gas:9000000});
+            const seedVariety=data1[1];
+			const farmingMethod=data1[2];
+			const harvestingMethod = data1[3];
+            const yeildQuantity = data1[4];
+            const moisture = data2[1];
+			const certification=data1[6];
+			const stapleLength=data2[2];
+			const micronairValue = data2[3];
+            const strength = data2[0];
+			const coloursUsed=data1[7];
+			const dyeMaterials=data1[8];
+			const temperature = data2[5];
+			const soakingTime = data2[6];
+			const pH = data2[4];
+			const warp=data1[9];
+			const weft=data1[10];
+			const colourfastness = data2[7];
+			const usertype="Weaver";
+			const Stage="Weave";
+            
+			document.getElementById("dataArea").innerHTML = 
+            `<strong> User Type:</strong> ${usertype} <br> 
+             <strong>Stage:</strong> ${Stage}`;
+
+			 document.getElementById("dataArea1").innerHTML = 
+            `<strong>Seed Variety:</strong> ${seedVariety} <br> 
+             <strong>Farming Method:</strong> ${farmingMethod} <br> 
+             <strong>Harvesting Method:</strong> ${harvestingMethod} <br> 
+             <strong>Yeild Quantity:</strong> ${yeildQuantity}`;
+
+			 document.getElementById("dataArea2").innerHTML = 
+            `<strong> Moisture:</strong> ${moisture} `;
+
+			document.getElementById("dataArea3").innerHTML = 
+            `<strong>Staple Length:</strong> ${stapleLength} <br>
+             <strong>Micronair Value:</strong> ${micronairValue}`;
+
+			 document.getElementById("dataArea4").innerHTML = 
+            `<strong>Dye Materials:</strong> ${dyeMaterials} <br>
+             <strong>Colours Used:</strong> ${coloursUsed} <br> 
+             <strong>Temperature:</strong> ${temperature} <br> 
+             <strong>Soaking Time:</strong> ${soakingTime} <br> 
+             <strong>pH:</strong> ${pH}`;
+
+			 document.getElementById("dataArea5").innerHTML = 
+            `<strong>Warp Yarn:</strong> ${warp} <br>
+             <strong>Weft Yarn:</strong> ${weft} <br> 
+             <strong>Certification:</strong> ${certification} <br> 
+             <strong>Strength:</strong> ${strength} <br> 
+             <strong>Colourfastness:</strong> ${colourfastness}`;
+
+        }
+		
+
+    </script>
+</body>
+</html>

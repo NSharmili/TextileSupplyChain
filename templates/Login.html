@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Redirect</title>
+<style>
+    /* Set background image */
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-image: url("./static/bg1.jpg");
+        background-size: cover; /* Optional: adjust as needed */
+        background-position: center; /* Optional: adjust as needed */
+        font-family: Arial, sans-serif; /* Optional: Adjust font family */
+    }
+
+
+h1 {
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Add a shadow effect */
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+h2{
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Add a shadow effect */
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+    .image-container {
+        position: relative;
+        margin: 10px;
+        cursor: pointer;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* Set the size for images */
+    .image-container img {
+        width: 200px; /* Adjust as needed */
+        height: auto; /* Maintain aspect ratio */
+        display: block;
+    }
+
+    /* Style for text */
+    .image-text {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        color: white;
+        padding: 5px;
+        box-sizing: border-box;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    /* Hover effect */
+    .image-container:hover {
+        transform: scale(1.1);
+    }
+</style>
+</head>
+<body>
+   
+        <h1>Textile Supply Chain</h1>
+        <br>
+        <h2>Welcome to User Registration/Login Page</h2>
+    
+        <div class="image-container" onclick="redirectToFlaskRoute('farmer')">
+            <img src="./static/Farmer.jpg" alt="Image 1">
+            <div class="image-text">FARMER</div>
+        </div>
+        <div class="image-container" onclick="redirectToFlaskRoute('yarnManufacturer')">
+            <img src="./static/YM.jpg" alt="Image 2">
+            <div class="image-text">YARN MANUFACTURER</div>
+        </div>
+        <div class="image-container" onclick="redirectToFlaskRoute('dyer')">
+            <img src="./static/Dyer.jpg" alt="Image 2">
+            <div class="image-text">DYER</div>
+        </div>
+        <div class="image-container" onclick="redirectToFlaskRoute('weaver')">
+            <img src="./static/Weaver.jpg" alt="Image 2">
+            <div class="image-text">WEAVER</div>
+        </div>
+        <div class="image-container" onclick="redirectToFlaskRoute('retailer')">
+            <img src="./static/Retailer.jpg" alt="Image 3">
+            <div class="image-text">RETAILER</div>
+        </div>
+        <div class="image-container" onclick="redirectToFlaskRoute('customer')">
+            <img src="./static/Customer.jpg" alt="Image 3">
+            <div class="image-text">CUSTOMER</div>
+        </div>
+     
+        
+<!-- <div class="image-container" onclick="redirectToPage('./Milkmanregister.html')">
+    <img src="./static/Farmer_image.jpeg" alt="Image 1">
+    <div class="image-text">MILK MAN</div>
+</div>
+<div class="image-container" onclick="redirectToPage('./Cooperatorregister.html')">
+    <img src="./static/cooperator_image.jpeg" alt="Image 2">
+    <div class="image-text">CO-OPERATOR</div>
+</div>
+<div class="image-container" onclick="redirectToPage('./RetailerRegister.html')">
+    <img src="./static/retailer_image.jpeg" alt="Image 3">
+    <div class="image-text">RETAILER</div>
+</div>
+<div class="image-container" onclick="redirectToPage('./CustomerRegister.html')">
+    <img src="./static/consumer_image.jpeg" alt="Image 3">
+    <div class="image-text">CUSTOMER</div>
+</div> -->
+
+<script>
+// Function to redirect to a page
+// function redirectToPage(url) {
+//     window.location.href = url;
+
+
+function redirectToFlaskRoute(user_type) {
+    // Make an AJAX request to the Flask route
+    fetch(`/redirect-to-page/${user_type}`)
+        .then(response => {
+            if (response.ok) {
+                // Handle success, you can redirect to another page if needed
+                window.location.href = response.url; // Redirect to another page after successful registration
+            } else {
+                // Handle error
+                console.error('Failed to register');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+</script>
+
+</body>
+</html>

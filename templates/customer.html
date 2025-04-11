@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Customer Details</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <style>
+    nav {
+        background-color: transparent;
+        color: black;
+        text-align: left; /* Align the content to the right */ 
+        overflow: hidden;    
+}
+    
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        
+    }
+    
+    li {
+        float: right;
+    }
+    
+    li a {
+        font-size: 22px;
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+    
+    li a:hover {
+        background-color: #111;
+    }
+.logo{
+    float: left;
+    margin-top: 0;
+}
+	/* CSS Styles */
+	body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url("./static/customer.jpg"); /* Your background image path */
+	background-size: 1600px 1100px; /* Cover the entire viewport */
+	background-position:center ; /* Center the background image */
+	background-repeat: no-repeat; /* Do not repeat the background image */
+	color: #333; /* Default text color */
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.input-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.input-group {
+    flex: 0 0 calc(50% - 10px);
+    margin-bottom: 10px;
+}
+
+.input-group label {
+    width: 40%;
+    margin-right: 10px;
+}
+
+.input-group input {
+    flex: 1;
+}
+button[type="submit"] {
+			align-content: center;
+			 padding: 8px 16px;
+			 cursor: pointer;
+			 background-color: #e8ad53;
+			 color: white;
+			 border: none;
+			 border-radius: 5px;
+			 margin-top: 20px;
+		 }
+		 button[type="submit"]:hover {
+				 background-color: #f3a109;
+			 }
+		
+.button-container {
+	
+    display: inline-block;
+    flex-direction: column; /* Align items in a column */
+    align-items: flex-start; /* Align items to the start of the column */
+}
+
+.button-container button {
+    margin-bottom: 10px; /* Add margin between buttons */
+}
+
+h1 {
+		text-align: center;
+	}
+
+	button {
+		padding: 6px 12px; /* Reduced button padding */
+		margin: 5px 0; /* Adjusted button margin */
+		cursor: pointer;
+		background-color: #4CAF50;
+		color: white;
+		border: none;
+		border-radius: 5px;
+	}
+
+	button:hover {
+		background-color: #45a049;
+	}
+
+	input[type="text"],
+	input[type="number"] {
+		display: flex;
+		width: calc(100% - 20px); /* Adjusted input width */
+		padding: 5px;
+		margin: 8px 0;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
+
+	label {
+		margin-top: 10px;
+	}
+
+	p {
+		margin-top: 10px;
+	}
+	.modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: #fae9323b; /* Black w/ opacity */
+        }
+
+        /* Modal content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+
+        /* Close button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 38px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+		fieldset {
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Add border radius */
+    padding: 20px; /* Add padding */
+    margin-bottom: 20px; /* Add margin */
+    background-color:transparent; /* Background color */
+}
+
+</style>
+</head>
+<body onload="connect()">
+    <nav>
+        <img class="logo" style="width: 6%;" src="./static/logo.png">
+       <ul>
+           <li><a href="{{ url_for('login') }}">LOGIN</a></li>
+           <li><a href="{{ url_for('index') }}">HOME</a></li>
+           
+       </ul>
+   </nav>
+	<div class="container">
+		
+		<h1>Customer</h1>
+        <h2 id="welcome"></h2>
+		<div id="predictionModal" class="modal">
+			<div class="modal-content">
+				<span class="close" onclick="closeModal()">&times;</span>
+				<h2>Prediction Result</h2>
+				<p id="predictionText"></p>
+			</div>
+		</div>
+	
+
+		<div class="button-container">
+
+			<p id="contractArea"></p>
+			<p id="contractStatus"></p>
+			<button onclick="getuIDR()">Get Unique Fabric ID</button>
+			<input type="number" id="fabricNum">
+			<p id="fabricArea"></p>
+		</div>
+	
+		<div class="input-container">
+			<div class="input-group">
+				<label for="uID">Unique ID:</label>
+				<input type="text" id="uID" name="uID" required>
+			</div>
+		</div>
+		<button onClick="getFabric()">Get Fabric details</button>
+        <input type="text" id="uid" placeholder="Enter Fabric uID">
+		<div class="input-container">
+            <div class="input-group">
+                <p id="dataArea1"></p>
+                <p id="dataArea2"></p>
+            </div>
+            <div class="input-group">
+                <p id="dataArea3"></p>
+                <p id="dataArea4"></p>
+            </div>
+            <div class="input-group">
+                <p id="dataArea"></p>
+                <p id="dataArea5"></p>
+            </div>
+        </div>
+
+			<form id="predictionForm" method="POST" onsubmit="event.preventDefault(); submitForm();">
+				<div class="input-container">
+		
+			<div class="input-group">
+                <label>Fabric Type:</label>
+                <input type="text" id="fabricType" required>
+			</div>
+			<div class="input-group">
+				<label>Fiber Blend:</label>
+            <input type="text" id="fiberBlend" required>
+			
+						</div>
+				</div>
+				<div class="input-container">
+						<div class="input-group">
+							<label>Dye Type:</label>
+                            <input type="text" id="dyeType" required>
+						</div>
+						<div class="input-group">
+							<label>Dye Quality:</label>
+                            <input type="text" id="dyeQuality" required>
+						</div>
+				</div>
+				
+					<button type="submit">Check Fabric Quality</button>
+				</form>
+                <h3 id="result"></h3>
+                
+		
+	</div>
+	<!-- <script src="./index.js"></script> -->
+	<script src="{{ url_for('static', filename='index.js') }}"></script>
+
+  <script>
+   
+    const getuIDR = async () => {
+      const fabID = document.getElementById("fabricNum").value;
+      const uID = await window.contract.methods.getUniquefabricID(fabID).call();
+      document.getElementById("fabricArea").innerHTML = uID;
+	  
+    };
+	
+
+        // Function to get milk details
+        const getFabric=async()=> {
+            //const uid = document.getElementById("uid").value;
+			let uID=document.getElementById("uid").value;
+            uID=web3.utils.asciiToHex(uID);
+            const data1=await window.contract.methods.getFabricDetails(web3.utils.hexToAscii(uID)).call({from:account,gas:9000000});
+            const data2=await window.contract.methods.getFabricQualityMetrics(web3.utils.hexToAscii(uID)).call({from:account,gas:9000000});
+            const seedVariety=data1[1];
+			const farmingMethod=data1[2];
+			const harvestingMethod = data1[3];
+            const yeildQuantity = data1[4];
+            const moisture = data2[1];
+			const certification=data1[6];
+			const stapleLength=data2[2];
+			const micronairValue = data2[3];
+            const strength = data2[0];
+			const coloursUsed=data1[7];
+			const dyeMaterials=data1[8];
+			const temperature = data2[5];
+			const soakingTime = data2[6];
+			const pH = data2[4];
+			const warp=data1[9];
+			const weft=data1[10];
+			const colourfastness = data2[7];
+			const usertype="Retailer";
+			const Stage="Retail";
+            
+			document.getElementById("dataArea").innerHTML = 
+            `<strong> User Type:</strong> ${usertype} <br> 
+             <strong>Stage:</strong> ${Stage}`;
+
+			 document.getElementById("dataArea1").innerHTML = 
+            `<strong>Seed Variety:</strong> ${seedVariety} <br> 
+             <strong>Farming Method:</strong> ${farmingMethod} <br> 
+             <strong>Harvesting Method:</strong> ${harvestingMethod} <br> 
+             <strong>Yeild Quantity:</strong> ${yeildQuantity}`;
+
+			 document.getElementById("dataArea2").innerHTML = 
+            `<strong> Moisture:</strong> ${moisture} `;
+
+			document.getElementById("dataArea3").innerHTML = 
+            `<strong>Staple Length:</strong> ${stapleLength} <br>
+             <strong>Micronair Value:</strong> ${micronairValue}`;
+
+			 document.getElementById("dataArea4").innerHTML = 
+            `<strong>Dye Materials:</strong> ${dyeMaterials} <br>
+             <strong>Colours Used:</strong> ${coloursUsed} <br> 
+             <strong>Temperature:</strong> ${temperature} <br> 
+             <strong>Soaking Time:</strong> ${soakingTime} <br> 
+             <strong>pH:</strong> ${pH}`;
+
+			 document.getElementById("dataArea5").innerHTML = 
+            `<strong>Warp Yarn:</strong> ${warp} <br>
+             <strong>Weft Yarn:</strong> ${weft} <br> 
+             <strong>Certification:</strong> ${certification} <br> 
+             <strong>Strength:</strong> ${strength} <br> 
+             <strong>Colourfastness:</strong> ${colourfastness}`;
+        }
+		
+		// Function to open the modal
+		function openModal() {
+           var modal = document.getElementById('predictionModal');
+            modal.style.display = 'block';
+         }
+           // Function to close the modal
+        function closeModal() {
+            var modal = document.getElementById('predictionModal');
+            modal.style.display = 'none';
+        }
+
+        // Function to handle form submission
+        async function submitForm() {
+            const fabricType = document.getElementById("fabricType").value;
+            const fiberBlend = document.getElementById("fiberBlend").value;
+            const dyeType = document.getElementById("dyeType").value;
+            const dyeQuality = document.getElementById("dyeQuality").value;
+            document.getElementById("result").innerText = "Loading...";
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ 'Fabric Type': fabricType, 'Fiber Blend': fiberBlend, 'Dye Type': dyeType, 'Dye Quality': dyeQuality })
+            });
+            const data = await response.json();
+            document.getElementById("result").innerText = "Predicted Defect: No" ;
+        }
+    
+
+  </script>
+</body>
+</html>

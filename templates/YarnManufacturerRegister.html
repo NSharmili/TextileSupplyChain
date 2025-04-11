@@ -1,0 +1,152 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Registration/Login Form</title> 
+    <link rel="stylesheet" 
+          href="static/style.css"> 
+          <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" crossorigin="anonymous"></script>
+
+		  <style> 
+
+			/* style.css */
+	
+			/* General reset and styling */
+			/* Styling for the main container */
+			body {
+				margin: 10;
+				padding: 10;
+				font-family: Arial, sans-serif; /* You can change the font-family as needed */
+				background-color: #f8f8f8; /* Fallback color if background image doesn't load */
+				background-image: url("./static/bg1.jpg"); /* Your background image path */
+				background-size: 1700px 1100px; /* Cover the entire viewport */
+				background-position:center ; /* Center the background image */
+				background-repeat: no-repeat; /* Do not repeat the background image */
+				color: #333; /* Default text color */
+			}
+	
+			/* Styling for the main container */
+			.main {
+        width: 40%;
+        margin: 20px auto 0; /* Push the main container down from the top */
+        padding: 30px; /* Add some padding for better readability */
+        background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+        border-radius: 10px; /* Add rounded corners to the container */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+        position: 1px;
+    }
+			/* Styling for the heading */
+			h1 {
+				font-size: 36px; /* Increase font size for a more prominent heading */
+				margin-bottom: 20px; /* Add some space below the heading */
+			}
+	
+			/* Styling for labels */
+			label {
+				display: block;
+				margin-bottom: 10px; /* Increase margin for better separation */
+				font-size: 16px; /* Adjust font size for better readability */
+			}
+	
+			/* Styling for input fields */
+			input[type="text"],
+			input[type="number"] {
+				width: 100%; /* Make input fields fill the container */
+				padding: 12px; /* Increase padding for better input experience */
+				margin-bottom: 15px; /* Adjust margin for better spacing */
+				border: 1px solid #ccc;
+				border-radius: 6px; /* Add slightly more rounded corners */
+				box-sizing: border-box;
+			}
+	
+			/* Styling for buttons */
+			button {
+				padding: 12px 24px; /* Adjust padding for better button size */
+				background-color: #007bff;
+				color: #fff;
+				border: none;
+				border-radius: 6px; /* Add rounded corners to buttons */
+				cursor: pointer;
+				transition: background-color 0.3s ease; /* Add smooth transition effect */
+				margin-right: 10px; /* Add margin to separate buttons */
+			}
+	
+			button:hover {
+				background-color: #0056b3;
+			}
+
+		</style>   
+<body onload="connect()"> 
+	
+	
+	<div class="main"> 
+		<h1>Registration Page</h1> 
+		<p id="contractArea"></p>
+		<p id="contractStatus"></p>
+		
+            <label for="first">User Name:</label> 
+            <input type="text" id="first" 
+                   placeholder="Enter your User name" >
+  
+            <label for="last">Yarn Manufacturer Id:</label> 
+            <input type="text" id="last" 
+                   placeholder="Enter your Yarn Manufacturer Id" > 
+
+            <label for="middle">Location:</label> 
+            <input type="text" id="middle" 
+                    placeholder="Enter your Location" >
+                   <!-- <button onclick="connectContract()">Click to Connect</button> -->
+                   <p id="ContractArea"></p>
+                   <button  onclick="registerUser()">Register</button>
+                   
+				   <button id="myButton" onclick="login()">Already Exists?Login</button>  
+				   <p id="submitdetails"></p>
+                   <button onclick="readContract()">Verify Registration</button>
+                    <input type="text" id="getAddress">
+                    <p id="dataArea"></p>
+                </div> 
+				<!-- <script src="./index.js"></script> -->
+				<script src="{{ url_for('static', filename='index.js') }}"></script>
+
+
+        <script >
+			  const registerUser = async () => {
+            const name = document.getElementById("first").value;
+            const useraddress = document.getElementById("last").value;
+            const location = document.getElementById("middle").value;
+
+			
+				document.getElementById("submitdetails").innerHTML = "DetailsSubmitted";
+                await window.contract.methods
+                  .registerYarnManufacturer(name, useraddress,location)
+                  .send({ from: useraddress, gas: 4000000 });
+				  
+          };
+          
+     const readContract = async () => {
+            const uadd = document.getElementById("getAddress").value;
+            let data;
+                data = await window.contract.methods.getYarnManufacturerdetails(uadd).call({from:uadd,gas:9000000});
+                // Since Solidity returns (yarnManufacturerName, location), data is an array
+        const yarnManufacturerName = data[0];  
+        const location = data[1];    
+
+        // Display the data in HTML
+        document.getElementById("dataArea").innerHTML = 
+            `<strong>Yarn Manufacturer Name:</strong> ${yarnManufacturerName} <br> 
+             <strong>Location:</strong> ${location}`;
+              
+          };
+		  const login=async()=> {
+			var c=await window.contract.methods.getYarnManufacturerdetails(account).call({from:account,gas:9000000});
+			console.log(c);
+			if(c){
+				window.location.href="/Collectyarndetails";
+			}
+		  }
+		
+		  
+          </script>
+   
+</body> 
+  
+</html>

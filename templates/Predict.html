@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Textile Defect Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Predict Textile Defect</h2>
+        <form id="predictionForm">
+            <label>Fabric Type:</label>
+            <input type="text" id="fabricType" required>
+            
+            <label>Fiber Blend:</label>
+            <input type="text" id="fiberBlend" required>
+            
+            <label>Dye Type:</label>
+            <input type="text" id="dyeType" required>
+            
+            <label>Dye Quality:</label>
+            <input type="number" step="0.1" id="dyeQuality" required>
+            
+            <button type="button" onclick="predictDefect()">Predict</button>
+        </form>
+        <h3 id="result"></h3>
+    </div>
+
+    <script>
+        async function predictDefect() {
+            const fabricType = document.getElementById("fabricType").value;
+            const fiberBlend = document.getElementById("fiberBlend").value;
+            const dyeType = document.getElementById("dyeType").value;
+            const dyeQuality = document.getElementById("dyeQuality").value;
+            
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ fabric_type: fabricType, fiber_blend: fiberBlend, dye_type: dyeType, dye_quality: dyeQuality })
+            });
+            
+            const data = await response.json();
+            document.getElementById("result").innerText = "Predicted Defect: " + data.prediction;
+        }
+    </script>
+</body>
+</html>
